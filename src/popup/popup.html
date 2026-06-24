@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxmox Helper</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <header class="popup__header">
+        <h1>Proxmox Helper</h1>
+        <p>QoL-Erweiterungen für die Proxmox-Web-Oberfläche</p>
+      </header>
+
+      <section class="popup__section">
+        <label class="toggle">
+          <input type="checkbox" id="copyButtons" />
+          <span class="toggle__label">Copy-Buttons anzeigen</span>
+        </label>
+        <p class="hint">
+          Fügt neben kopierbaren Feldern (IPs, IDs, Tokens, …) einen
+          Copy-Button ein.
+        </p>
+      </section>
+
+      <footer class="popup__footer">
+        <a
+          href="https://github.com/SylvanoP/proxmox-helper"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+      </footer>
+    </main>
+    <script type="module" src="popup.ts"></script>
+  </body>
+</html>
