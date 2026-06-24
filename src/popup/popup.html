@@ -16,10 +16,36 @@
       <section class="popup__section">
         <label class="toggle">
           <input type="checkbox" id="copyButtons" />
-          <span class="toggle__label">Copy-Buttons anzeigen</span>
+          <span class="toggle__label">Copy-Buttons</span>
         </label>
         <p class="hint">
-          Copy-Buttons bei Backups, CT Templates, CT Volumes und VM Disks (Namensspalte).
+          Storage-Listen, VM/CT-Felder (IP, MAC, …) und Task-Logs.
+        </p>
+
+        <label class="toggle">
+          <input type="checkbox" id="keyboardShortcuts" />
+          <span class="toggle__label">Tastaturkürzel</span>
+        </label>
+        <p class="hint"><kbd>/</kbd> oder <kbd>Ctrl+K</kbd> Suche · <kbd>Ctrl+Shift+C</kbd> VMID kopieren</p>
+
+        <label class="toggle">
+          <input type="checkbox" id="shellCommands" />
+          <span class="toggle__label">Shell-Befehle</span>
+        </label>
+        <p class="hint">qm/pct-Befehle kopieren, wenn ein Gast ausgewählt ist.</p>
+
+        <label class="toggle">
+          <input type="checkbox" id="pinnedGuests" />
+          <span class="toggle__label">Gepinnte Gäste</span>
+        </label>
+        <p class="hint">Stern in der Baumansicht · Schnellzugriff oben rechts.</p>
+
+        <label class="toggle">
+          <input type="checkbox" id="apiInsights" />
+          <span class="toggle__label">API-Insights (Opt-in)</span>
+        </label>
+        <p class="hint">
+          Storage-Warnung ab 90% Belegung. Nutzt deine bestehende Proxmox-Session.
         </p>
       </section>
 

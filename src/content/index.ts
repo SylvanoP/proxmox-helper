@@ -1,9 +1,19 @@
 import { isProxmoxPage } from './detect-proxmox';
+import { apiInsightsEnhancement } from './enhancements/api-insights';
 import { copyButtonEnhancement } from './enhancements/copy-button';
+import { keyboardShortcutsEnhancement } from './enhancements/keyboard-shortcuts';
+import { pinnedGuestsEnhancement } from './enhancements/pinned-guests';
+import { shellCommandsEnhancement } from './enhancements/shell-commands';
 import type { Enhancement } from './enhancements/types';
 import { getSettings, onSettingsChanged, type Settings } from '../shared/settings';
 
-const ENHANCEMENTS: Enhancement[] = [copyButtonEnhancement];
+const ENHANCEMENTS: Enhancement[] = [
+  copyButtonEnhancement,
+  keyboardShortcutsEnhancement,
+  shellCommandsEnhancement,
+  pinnedGuestsEnhancement,
+  apiInsightsEnhancement,
+];
 
 const activeEnhancements = new Set<string>();
 

@@ -1,18 +1,37 @@
-import { getSettings, saveSettings } from '../shared/settings';
+import { getSettings, saveSettings, type Settings } from '../shared/settings';
 
-const copyButtonsCheckbox = document.getElementById(
-  'copyButtons',
-) as HTMLInputElement;
+type SettingKey = keyof Settings;
+
+const TOGGLES: Array<{ id: SettingKey; elementId: string }> = [
+  { id: 'copyButtons', elementId: 'copyButtons' },
+  { id: 'keyboardShortcuts', elementId: 'keyboardShortcuts' },
+  { id: 'shellCommands', elementId: 'shellCommands' },
+  { id: 'pinnedGuests', elementId: 'pinnedGuests' },
+  { id: 'apiInsights', elementId: 'apiInsights' },
+];
 
 async function loadSettings(): Promise<void> {
   const settings = await getSettings();
-  copyButtonsCheckbox.checked = settings.copyButtons;
+
+  for (const toggle of TOGGLES) {
+    const element = document.getElementById(toggle.elementId) as HTMLInputElement | null;
+    if (element) {
+      element.checked = settings[toggle.id];
+    }
+  }
 }
 
-copyButtonsCheckbox.addEventListener('change', async () => {
-  const settings = await getSettings();
-  settings.copyButtons = copyButtonsCheckbox.checked;
-  await saveSettings(settings);
-});
+for (const toggle of TOGGLES) {
+  const element = document.getElementById(toggle.elementId) as HTMLInputElement | null;
+  if (!element) {
+    continue;
+  }
+
+  element.addEventListener('change', async () => {
+    const settings = await getSettings();
+    settings[toggle.id] = element.checked;
+    await saveSettings(settings);
+  });
+}
 
 void loadSettings();

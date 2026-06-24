@@ -1,3 +1,4 @@
+const TASK_LABELS = ['task', 'tasks', 'aufgabe', 'aufgaben', 'task history'];
 const BACKUP_LABELS = ['backup', 'backups', 'sicherung', 'sicherungen'];
 const CT_TEMPLATE_LABELS = [
   'ct template',
@@ -8,7 +9,14 @@ const CT_TEMPLATE_LABELS = [
   'ct vorlagen',
 ];
 const CT_VOLUME_LABELS = ['ct volume', 'ct volumes', 'ct-volume', 'ct-volumes'];
-const VM_DISK_LABELS = ['vm disk', 'vm disks', 'vm-disk', 'vm-disks', 'vm-laufwerk', 'vm-laufwerke'];
+const VM_DISK_LABELS = [
+  'vm disk',
+  'vm disks',
+  'vm-disk',
+  'vm-disks',
+  'vm-laufwerk',
+  'vm-laufwerke',
+];
 
 function normalizeLabel(value: string): string {
   return value.trim().toLowerCase();
@@ -39,7 +47,7 @@ function getSelectedSidebarLabel(): string | null {
   return null;
 }
 
-function hashIndicatesAllowedView(): boolean {
+function hashIndicatesStorageView(): boolean {
   const hash = location.hash.toLowerCase();
   return (
     hash.includes('backup') ||
@@ -52,7 +60,7 @@ function hashIndicatesAllowedView(): boolean {
 
 /** Copy buttons on storage content lists (name column). */
 export function isStorageNameCopyContext(): boolean {
-  if (hashIndicatesAllowedView()) {
+  if (hashIndicatesStorageView()) {
     return true;
   }
 
@@ -67,4 +75,18 @@ export function isStorageNameCopyContext(): boolean {
     labelMatches(label, CT_VOLUME_LABELS) ||
     labelMatches(label, VM_DISK_LABELS)
   );
+}
+
+export function isTaskLogCopyContext(): boolean {
+  const hash = location.hash.toLowerCase();
+  if (hash.includes('tasks')) {
+    return true;
+  }
+
+  const label = getSelectedSidebarLabel();
+  if (!label) {
+    return false;
+  }
+
+  return labelMatches(label, TASK_LABELS);
 }

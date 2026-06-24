@@ -1,9 +1,17 @@
 const DEFAULT_SETTINGS = {
   copyButtons: true,
+  keyboardShortcuts: true,
+  shellCommands: true,
+  pinnedGuests: true,
+  apiInsights: false,
 };
 
 export type Settings = {
   copyButtons: boolean;
+  keyboardShortcuts: boolean;
+  shellCommands: boolean;
+  pinnedGuests: boolean;
+  apiInsights: boolean;
 };
 
 export const STORAGE_KEY = 'settings';

@@ -2,7 +2,17 @@
 
 Chrome-Extension mit Quality-of-Life-Verbesserungen für die [Proxmox VE](https://www.proxmox.com/) Web-Oberfläche.
 
-Aktuell: Copy-Buttons in Storage-Listen für **Backups**, **CT Templates**, **CT Volumes** und **VM Disks** (Namensspalte).
+Aktuell: Copy-Buttons, Tastaturkürzel, Shell-Befehle, gepinnte Gäste und optionale API-Insights für die Proxmox-Web-UI.
+
+## Features
+
+| Feature | Beschreibung |
+|---------|--------------|
+| **Copy-Buttons** | Storage-Listen (Backups, Templates, …), VM/CT-Felder (IP, MAC, Gateway, …), Task-Logs |
+| **Tastaturkürzel** | `/` oder `Ctrl+K` → Suche fokussieren · `Ctrl+Shift+C` → VMID kopieren |
+| **Shell-Befehle** | Leiste mit `qm`/`pct`-Befehlen zum Kopieren bei ausgewähltem Gast |
+| **Gepinnte Gäste** | Stern in der Baumansicht · Schnellzugriff-Leiste oben rechts |
+| **API-Insights** | Opt-in: Storage-Warnbadge ab 90% Belegung (nutzt Proxmox-Session) |
 
 ## Funktionsweise
 
@@ -64,11 +74,15 @@ Dann `dist/` wie oben laden. Änderungen werden beim Speichern neu gebaut.
 
 ## Einstellungen
 
-Über das Extension-Icon im Browser:
+Über das Extension-Icon im Browser — jedes Feature einzeln ein-/ausschaltbar:
 
-- **Copy-Buttons anzeigen** – ein-/ausschalten
+- **Copy-Buttons** – Storage, Formularfelder, Task-Logs
+- **Tastaturkürzel** – Suche und VMID
+- **Shell-Befehle** – qm/pct zum Kopieren
+- **Gepinnte Gäste** – Favoriten in der Baumansicht
+- **API-Insights** – Storage-Warnungen (Opt-in, nutzt bestehende Session)
 
-Einstellungen werden per `chrome.storage.sync` gespeichert.
+Einstellungen werden per `chrome.storage.sync` gespeichert. Gepinnte Gäste liegen in `chrome.storage.local`.
 
 ## Neues Feature hinzufügen
 
@@ -97,9 +111,9 @@ src/
 
 ## Roadmap
 
-- Copy-Buttons für weitere Proxmox-Felder
-- Keyboard-Shortcuts
-- Optional später: Proxmox REST API für Bulk-Operationen
+- Weitere Copy-Kontexte (Firewall, Backup-Jobs)
+- Console-Paste-Helper für noVNC
+- Erweiterte API-Insights (Backup-Alter pro VM)
 
 ## Lizenz
 

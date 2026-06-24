@@ -111,6 +111,141 @@ export function ensureStyles(): void {
     .ph-copy-toast--error {
       background: #a93226;
     }
+
+    .ph-shell-bar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2147483646;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      max-width: calc(100vw - 32px);
+      margin-top: 4px;
+      padding: 6px 10px;
+      border: 1px solid #d8d8d8;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 12px;
+    }
+
+    .ph-shell-bar__title {
+      font-weight: 600;
+      color: #444;
+      white-space: nowrap;
+    }
+
+    .ph-shell-bar__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .ph-shell-bar__btn {
+      padding: 3px 8px;
+      border: 1px solid #c8c8c8;
+      border-radius: 3px;
+      background: #f5f5f5;
+      color: #333;
+      cursor: pointer;
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .ph-shell-bar__btn:hover {
+      background: #e56531;
+      border-color: #d45520;
+      color: #fff;
+    }
+
+    .ph-pinned-bar {
+      position: fixed;
+      top: 0;
+      right: 12px;
+      z-index: 2147483645;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 45vw;
+      margin-top: 4px;
+      padding: 5px 8px;
+      border: 1px solid #d8d8d8;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 11px;
+    }
+
+    .ph-pinned-bar__label {
+      font-weight: 600;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .ph-pinned-bar__item {
+      padding: 3px 8px;
+      border: 1px solid #c8c8c8;
+      border-radius: 3px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .ph-pinned-bar__item:hover {
+      background: #e56531;
+      border-color: #d45520;
+      color: #fff;
+    }
+
+    .ph-pin-btn {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: #999;
+      cursor: pointer;
+      font-size: 13px;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.15s, color 0.15s;
+    }
+
+    .x-treelist-item:hover .ph-pin-btn,
+    .ph-pin-btn--active {
+      opacity: 1;
+    }
+
+    .ph-pin-btn--active {
+      color: #e56531;
+    }
+
+    .ph-pin-btn:hover {
+      color: #e56531;
+    }
+
+    .ph-storage-warn {
+      display: inline-flex;
+      margin-left: 6px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #c0392b;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1.3;
+      vertical-align: middle;
+    }
   `;
   document.head.appendChild(style);
 }

@@ -11,7 +11,7 @@ body {
 }
 
 .popup {
-  width: 300px;
+  width: 320px;
   padding: 16px;
 }
 
@@ -33,6 +33,9 @@ body {
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .toggle {
@@ -54,10 +57,20 @@ body {
 }
 
 .hint {
-  margin: 8px 0 0;
+  margin: -4px 0 4px 24px;
   color: #777;
   font-size: 11px;
   line-height: 1.4;
+}
+
+.hint kbd {
+  display: inline-block;
+  padding: 1px 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #f4f4f4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
 }
 
 .popup__footer {
