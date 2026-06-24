@@ -1,16 +1,17 @@
 import { copyToClipboard } from '../../shared/clipboard';
 import {
+  attachCopyButtonToCell,
   createCopyButton,
   ensureStyles,
-  getElementText,
+  getCopyableText,
   observeDomChanges,
-  wrapWithCopyButton,
 } from '../../shared/dom';
 import {
   COPY_MARKER,
-  COPY_TARGETS,
-  isLikelyCopyableValue,
+  GRID_NAME_CELL_SELECTOR,
+  isFilenameLike,
 } from '../../shared/selectors';
+import { isStorageNameCopyContext } from '../storage-context';
 
 export interface Enhancement {
   id: string;
@@ -20,44 +21,77 @@ export interface Enhancement {
 
 let observer: MutationObserver | null = null;
 
-function shouldEnhanceElement(element: HTMLElement): boolean {
+function shouldEnhanceGridCell(element: HTMLElement): boolean {
+  if (!isStorageNameCopyContext()) {
+    return false;
+  }
+
   if (element.hasAttribute(COPY_MARKER)) {
     return false;
   }
 
-  if (element.closest('.ph-copy-wrap')) {
+  if (
+    element.closest(
+      '.x-form-trigger-wrap, .x-combobox, .x-boundlist, .x-form-type-combobox, .x-field',
+    )
+  ) {
     return false;
   }
 
-  if (element instanceof HTMLInputElement && element.type === 'password') {
-    return false;
-  }
-
-  if (element instanceof HTMLInputElement && element.type === 'hidden') {
-    return false;
-  }
-
-  const value = getElementText(element).trim();
-  return isLikelyCopyableValue(value);
+  const text = getCopyableText(element).trim();
+  return isFilenameLike(text);
 }
 
-function enhanceElement(element: HTMLElement): void {
-  if (!shouldEnhanceElement(element)) {
+function enhanceGridCell(element: HTMLElement): void {
+  if (!shouldEnhanceGridCell(element)) {
     return;
   }
 
+  const text = getCopyableText(element).trim();
+  element.dataset.phCopyValue = text;
+
   const button = createCopyButton(
-    () => getElementText(element),
+    () => element.dataset.phCopyValue ?? getCopyableText(element),
     copyToClipboard,
   );
-  wrapWithCopyButton(element, button);
+  attachCopyButtonToCell(element, button);
 }
 
 function scanForCopyTargets(): void {
-  for (const target of COPY_TARGETS) {
-    const elements = document.querySelectorAll<HTMLElement>(target.selector);
-    elements.forEach((element) => enhanceElement(element));
+  if (!isStorageNameCopyContext()) {
+    cleanupCopyMarkers();
+    return;
   }
+
+  document
+    .querySelectorAll<HTMLElement>(GRID_NAME_CELL_SELECTOR)
+    .forEach((element) => enhanceGridCell(element));
+}
+
+function cleanupCopyMarkers(): void {
+  document.querySelectorAll(`[${COPY_MARKER}]`).forEach((element) => {
+    if (!(element instanceof HTMLElement)) {
+      return;
+    }
+
+    if (element.classList.contains('ph-copy-cell')) {
+      element.querySelector('.ph-copy-btn')?.remove();
+      element.classList.remove('ph-copy-cell');
+      element.removeAttribute(COPY_MARKER);
+      delete element.dataset.phCopyValue;
+      return;
+    }
+
+    const wrapper = element.closest('.ph-copy-wrap');
+    const button = wrapper?.querySelector('.ph-copy-btn');
+    button?.remove();
+    element.removeAttribute(COPY_MARKER);
+
+    if (wrapper?.parentElement) {
+      wrapper.parentElement.insertBefore(element, wrapper);
+      wrapper.remove();
+    }
+  });
 }
 
 export const copyButtonEnhancement: Enhancement = {
@@ -72,17 +106,6 @@ export const copyButtonEnhancement: Enhancement = {
   stop() {
     observer?.disconnect();
     observer = null;
-
-    document.querySelectorAll(`[${COPY_MARKER}]`).forEach((element) => {
-      const wrapper = element.closest('.ph-copy-wrap');
-      const button = wrapper?.querySelector('.ph-copy-btn');
-      button?.remove();
-      element.removeAttribute(COPY_MARKER);
-
-      if (wrapper && wrapper.parentElement) {
-        wrapper.parentElement.insertBefore(element, wrapper);
-        wrapper.remove();
-      }
-    });
+    cleanupCopyMarkers();
   },
 };

@@ -59,8 +59,84 @@ export function ensureStyles(): void {
       border-color: #a93226;
       color: #fff;
     }
+
+    .ph-copy-cell {
+      display: inline-flex !important;
+      align-items: center;
+      gap: 4px;
+      max-width: 100%;
+      overflow: visible !important;
+    }
+
+    .ph-copy-cell .ph-copy-btn {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .x-grid-row:hover .ph-copy-cell .ph-copy-btn,
+    .ph-copy-cell .ph-copy-btn:focus,
+    .ph-copy-cell .ph-copy-btn.ph-copy-btn--success,
+    .ph-copy-cell .ph-copy-btn.ph-copy-btn--error {
+      opacity: 1;
+    }
+
+    .ph-copy-toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 2147483647;
+      padding: 10px 16px;
+      border-radius: 6px;
+      background: #2e6b30;
+      color: #fff;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .ph-copy-toast--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ph-copy-toast--error {
+      background: #a93226;
+    }
   `;
   document.head.appendChild(style);
+}
+
+let toastTimeout: number | undefined;
+
+export function showCopyToast(message = 'Kopiert!', success = true): void {
+  let toast = document.getElementById('ph-copy-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'ph-copy-toast';
+    toast.className = 'ph-copy-toast';
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.classList.toggle('ph-copy-toast--error', !success);
+  toast.classList.add('ph-copy-toast--visible');
+
+  if (toastTimeout !== undefined) {
+    window.clearTimeout(toastTimeout);
+  }
+
+  toastTimeout = window.setTimeout(() => {
+    toast?.classList.remove('ph-copy-toast--visible');
+  }, 2000);
 }
 
 export function createCopyButton(
@@ -72,26 +148,47 @@ export function createCopyButton(
   button.className = 'ph-copy-btn';
   button.title = 'In Zwischenablage kopieren';
   button.setAttribute('aria-label', 'In Zwischenablage kopieren');
-  button.textContent = '⧉';
+  button.innerHTML =
+    '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3a1 1 0 0 1 1-1h8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
 
   button.addEventListener('click', async (event) => {
     event.preventDefault();
     event.stopPropagation();
 
     const success = await onCopy(getValue());
-    const original = button.textContent;
+    const originalHtml = button.innerHTML;
 
     button.classList.remove('ph-copy-btn--success', 'ph-copy-btn--error');
     button.classList.add(success ? 'ph-copy-btn--success' : 'ph-copy-btn--error');
-    button.textContent = success ? '✓' : '✗';
+
+    if (success) {
+      button.textContent = '✓';
+      showCopyToast('Kopiert!', true);
+    } else {
+      button.textContent = '✗';
+      showCopyToast('Kopieren fehlgeschlagen', false);
+    }
 
     window.setTimeout(() => {
       button.classList.remove('ph-copy-btn--success', 'ph-copy-btn--error');
-      button.textContent = original;
-    }, 1200);
+      button.innerHTML = originalHtml;
+    }, 1500);
   });
 
   return button;
+}
+
+export function attachCopyButtonToCell(
+  container: HTMLElement,
+  button: HTMLButtonElement,
+): void {
+  if (container.hasAttribute(COPY_MARKER)) {
+    return;
+  }
+
+  container.classList.add('ph-copy-cell');
+  container.appendChild(button);
+  container.setAttribute(COPY_MARKER, 'true');
 }
 
 export function wrapWithCopyButton(
@@ -142,9 +239,17 @@ export function observeDomChanges(callback: () => void): MutationObserver {
   return observer;
 }
 
-export function getElementText(element: HTMLElement): string {
+export function getCopyableText(element: HTMLElement): string {
   if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
     return element.value;
   }
-  return element.textContent ?? '';
+
+  const stored = element.dataset.phCopyValue;
+  if (stored) {
+    return stored;
+  }
+
+  const clone = element.cloneNode(true) as HTMLElement;
+  clone.querySelectorAll('.ph-copy-btn').forEach((btn) => btn.remove());
+  return (clone.textContent ?? '').trim();
 }

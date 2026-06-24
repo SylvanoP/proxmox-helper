@@ -1,47 +1,34 @@
 export const COPY_MARKER = 'data-ph-copy';
 
-export interface CopyTarget {
-  selector: string;
-  label?: string;
-}
+/** ExtJS grid "Name" column in storage content lists. */
+export const GRID_NAME_CELL_SELECTOR =
+  '.x-grid-view .x-grid-cell-first .x-grid-cell-inner';
 
-/** Proxmox DOM selectors for fields that benefit from a copy button. */
-export const COPY_TARGETS: CopyTarget[] = [
-  { selector: 'input.x-form-field[type="text"][readonly]', label: 'Feld' },
-  { selector: 'input.x-form-field[type="text"]:not([type="password"])', label: 'Feld' },
-  { selector: 'textarea.x-form-field[readonly]', label: 'Text' },
-  { selector: 'div.x-form-display-field', label: 'Wert' },
-  { selector: 'span[id*="value"]', label: 'Wert' },
+const SKIP_VALUE_PATTERNS = [
+  /^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/,
+  /^(tzst|txz|vma|iso|raw|qcow2|vmdk)$/i,
 ];
 
-export function isLikelyCopyableValue(value: string): boolean {
+const FILENAME_PATTERNS = [
+  /^vzdump-(qemu|lxc)-\d+-.+/i,
+  /^(vm|subvol|base)-\d+-disk-\d+/i,
+  /\.(tar\.(zst|gz|lzo|xz)|vma\.(zst|gz|lzo)|iso|img|qcow2|raw|vmdk|log|conf)$/i,
+  /^[\w@.+()-]+\.(zst|xz|gz|img|raw|qcow2|vmdk)$/i,
+];
+
+export function isFilenameLike(value: string): boolean {
   const trimmed = value.trim();
-  if (!trimmed || trimmed.length > 500) {
+  if (!trimmed || trimmed.length < 3 || trimmed.length > 255) {
     return false;
   }
 
-  if (trimmed.length < 3) {
+  if (trimmed.includes('\n') || trimmed.includes(' ')) {
     return false;
   }
 
-  const skipPatterns = [
-    /^(ja|nein|yes|no|true|false|on|off)$/i,
-    /^(running|stopped|paused|enabled|disabled)$/i,
-    /^\d+\s*(gb|mb|kb|tb|%|mhz|ghz)$/i,
-  ];
-
-  if (skipPatterns.some((pattern) => pattern.test(trimmed))) {
+  if (SKIP_VALUE_PATTERNS.some((pattern) => pattern.test(trimmed))) {
     return false;
   }
 
-  const copyablePatterns = [
-    /^[\d.a-f:]+$/i,
-    /^[\w.-]+@[\w.-]+$/,
-    /^[\w./:?#&=+-]+$/,
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-    /^PVEAPIToken=/i,
-    /^vmid:\d+/i,
-  ];
-
-  return copyablePatterns.some((pattern) => pattern.test(trimmed));
+  return FILENAME_PATTERNS.some((pattern) => pattern.test(trimmed));
 }

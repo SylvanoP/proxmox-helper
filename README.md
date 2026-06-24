@@ -2,7 +2,7 @@
 
 Chrome-Extension mit Quality-of-Life-Verbesserungen für die [Proxmox VE](https://www.proxmox.com/) Web-Oberfläche.
 
-Aktuell: Copy-Buttons neben kopierbaren Feldern (IPs, IDs, Tokens, MAC-Adressen, …).
+Aktuell: Copy-Buttons in Storage-Listen für **Backups**, **CT Templates**, **CT Volumes** und **VM Disks** (Namensspalte).
 
 ## Funktionsweise
 
