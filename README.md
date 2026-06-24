@@ -8,14 +8,28 @@ Aktuell: Copy-Buttons in Storage-Listen für **Backups**, **CT Templates**, **CT
 
 Die Extension injiziert **Content Scripts** in die laufende Proxmox-Web-UI (Port `8006`). Es werden keine Credentials gespeichert und keine Daten an externe Server gesendet. Die Erweiterung liest und ergänzt nur das DOM der Seite, die du bereits geöffnet hast.
 
-## Installation (Entwicklung)
+## Installation
 
 ### Voraussetzungen
 
-- Node.js 20+
 - Google Chrome oder Chromium
+- Zum lokalen Bauen: Node.js 20+
 
-### Build
+### Fertig gebaut (ohne Node.js)
+
+**GitHub Release** (empfohlen für stabile Versionen):
+
+1. Unter [Releases](https://github.com/SylvanoP/proxmox-helper/releases) die neueste Version laden
+2. ZIP entpacken → ein Ordner mit `manifest.json` im Root
+3. In Chrome: `chrome://extensions` → **Entwicklermodus** → **Entpackte Erweiterung laden** → diesen Ordner wählen
+
+**Neuester Build von `main`** (tägliche Entwicklungsversion):
+
+1. [Actions → CI](https://github.com/SylvanoP/proxmox-helper/actions/workflows/ci.yml) → letzter grüner Lauf auf `main`
+2. Artefakt **proxmox-helper-extension** herunterladen und entpacken
+3. Entpackten Ordner wie oben in Chrome laden
+
+### Lokal bauen (Entwicklung)
 
 ```bash
 npm install
@@ -28,8 +42,17 @@ Der fertige Extension-Ordner liegt in `dist/`.
 
 1. `chrome://extensions` öffnen
 2. **Entwicklermodus** aktivieren
-3. **Entpackte Erweiterung laden** → Ordner `dist/` auswählen
+3. **Entpackte Erweiterung laden** → Ordner `dist/` (oder entpacktes Release) auswählen
 4. Proxmox-Web-UI öffnen (`https://dein-host:8006`)
+
+### Release erstellen (Maintainer)
+
+Bei einem Version-Tag baut CI automatisch und hängt ein ZIP an das GitHub Release:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
 
 ### Entwicklung mit Hot Reload
 
