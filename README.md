@@ -76,7 +76,6 @@ src/
 
 - Copy-Buttons für weitere Proxmox-Felder
 - Keyboard-Shortcuts
-- Status-Badges / bessere Übersicht
 - Optional später: Proxmox REST API für Bulk-Operationen
 
 ## Lizenz

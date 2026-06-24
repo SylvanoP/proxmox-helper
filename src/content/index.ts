@@ -1,6 +1,6 @@
 import { isProxmoxPage } from './detect-proxmox';
 import { copyButtonEnhancement } from './enhancements/copy-button';
-import type { Enhancement } from './enhancements/copy-button';
+import type { Enhancement } from './enhancements/types';
 import { getSettings, onSettingsChanged, type Settings } from '../shared/settings';
 
 const ENHANCEMENTS: Enhancement[] = [copyButtonEnhancement];

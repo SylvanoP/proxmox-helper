@@ -13,11 +13,7 @@ import {
 } from '../../shared/selectors';
 import { isStorageNameCopyContext } from '../storage-context';
 
-export interface Enhancement {
-  id: string;
-  start: () => void;
-  stop: () => void;
-}
+import type { Enhancement } from './types';
 
 let observer: MutationObserver | null = null;
 
